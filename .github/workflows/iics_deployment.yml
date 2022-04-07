@@ -3,7 +3,9 @@ name: DEPLOY_MAPPING_TASK
 # Controls when the workflow will run
 on:
   push:
-    branches: [ dev/**/mapping_tasks/** ]
+    branches: 
+      - "./dev/**/mapping_tasks/**"
+      - "main"
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -23,6 +25,10 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: '3.x'
+      
+        run: |
+            python -m pip install --upgrade pip
+            pip install requests os
 
       # Runs a single command using the runners shell
       - name: Login to development

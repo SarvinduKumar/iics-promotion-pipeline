@@ -9,7 +9,10 @@ URL = "https://dm-us.informaticacloud.com/saas/public/core/v3/login"
 BODY = {"username": USERNAME,"password": PASSWORD}
 
 r = requests.post(url = URL, json = BODY)
-  
+
+if r.status_code != 200:
+    print("Caught exception: " + r.text)
+
 # extracting data in json format
 data = r.json()
 

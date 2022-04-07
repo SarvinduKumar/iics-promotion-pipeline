@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: '3.x'
-          
+
       # Runs a single command using the runners shell
       - name: Login to development
-        run: py ./scripts/infa_login.py
+        run: python ./scripts/infa_login.py

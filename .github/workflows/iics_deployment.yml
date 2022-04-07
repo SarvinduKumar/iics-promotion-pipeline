@@ -17,6 +17,8 @@ jobs:
     env:
       IICS_LOGIN_URL: https://dm-us.informaticacloud.com
       IICS_POD_URL: https://usw5.dm-us.informaticacloud.com
+      IICS_USERNAME: ${{ secrets.IICS_USERNAME }}
+      IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

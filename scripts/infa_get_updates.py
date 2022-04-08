@@ -6,13 +6,13 @@ import sys
 
 URL = os.environ['IICS_POD_URL']
 SESSION_ID = os.environ['sessionId']
-GITHUB_SHA = os.environ['GITHUB_SHA']
+COMMIT_HASH = os.environ['COMMIT_HASH']
 
 HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": SESSION_ID }
 HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": SESSION_ID }
 
 # Get all the objects for commit
-r = requests.get(URL + "/public/core/v3/commit/" + GITHUB_SHA, headers = HEADERS)
+r = requests.get(URL + "/public/core/v3/commit/" + COMMIT_HASH, headers = HEADERS)
 
 if r.status_code != 200:
     print("Exception caught: " + r.text)

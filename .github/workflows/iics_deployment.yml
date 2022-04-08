@@ -19,7 +19,7 @@ jobs:
       IICS_USERNAME: ${{ secrets.IICS_USERNAME }}
       IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
       # This is overriding until we connect the repository with a workflow_dispatch
-      GITHUB_SHA: 187e6974986a0b92b45364b3dbe735e2f6eb41c1
+      COMMIT_HASH: 187e6974986a0b92b45364b3dbe735e2f6eb41c1
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

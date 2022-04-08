@@ -17,3 +17,8 @@ if r.status_code != 200:
 data = r.json()
 
 os.environ['sessionId'] = data['userInfo']['sessionId']
+
+env_file = os.getenv('GITHUB_ENV')
+
+with open(env_file, "a") as myfile:
+    myfile.write("sessionId=" + data['userInfo']['sessionId'])

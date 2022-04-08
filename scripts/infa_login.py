@@ -18,6 +18,8 @@ data = r.json()
 
 os.environ['sessionId'] = data['userInfo']['sessionId']
 
+print(os.listdir())
+
 env_file = os.getenv('GITHUB_ENV')
 
 with open(env_file, "a") as myfile:

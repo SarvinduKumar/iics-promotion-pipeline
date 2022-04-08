@@ -4,7 +4,6 @@ name: DEPLOY_MAPPING_TASK
 on:
   push:
     branches: 
-      - "./dev/**/mapping_tasks/**"
       - "main"
   workflow_dispatch:
 
@@ -38,3 +37,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Login to development
         run: python ./scripts/infa_login.py
+
+      - name: Get committed mapping tasks
+        run: python ./scripts/infa_get_updates.py
+
+      - name: Run test
+        run: echo Tests

@@ -60,8 +60,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: tjohnsoninformatica/IICS-CDP-CICD-demo
-          ref: uat
+          ref: UAT
           token: ${{ secrets.GH_TOKEN }}
+          path: IICS-CDP-CICD-demo
 
       - name: Commit changes
         run: git checkout UAT | git cherry-pick -x ${COMMIT_HASH}

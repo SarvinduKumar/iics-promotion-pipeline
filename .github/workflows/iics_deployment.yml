@@ -15,7 +15,7 @@ env:
   IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
 
   # This is overriding until we connect the repository with a workflow_dispatch
-  COMMIT_HASH: 734d5b38e8151e697ffbb2f8105688a6015cb115
+  COMMIT_HASH: 6da15882757a34264b6a03ddea8cf55f268447b9
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

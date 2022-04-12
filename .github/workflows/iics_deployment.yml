@@ -76,7 +76,7 @@ jobs:
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick -x ${COMMIT_HASH}; git push
 
       - name: Get latest commit hash
-        run: echo "UAT_SHA=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
+        run: cd ./IICS-CDP-CICD-demo; echo "UAT_SHA=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
 
       - name: Echo SHA
         run: echo "$UAT_SHA"

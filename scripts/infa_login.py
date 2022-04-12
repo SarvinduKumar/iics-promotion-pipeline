@@ -1,5 +1,7 @@
 import requests
 import os
+from base64 import b64encode
+from nacl import encoding, public
 
 URL = os.environ['IICS_LOGIN_URL']
 USERNAME = os.environ['IICS_USERNAME']
@@ -24,3 +26,9 @@ env_file = os.getenv('GITHUB_ENV')
 
 with open(env_file, "a") as myfile:
     myfile.write("sessionId=" + data['userInfo']['sessionId'])
+
+
+#public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+#sealed_box = public.SealedBox(public_key)
+#encrypted = sealed_box.encrypt(data['userInfo']['sessionId'].encode("utf-8"))
+#b64encode(encrypted).decode("utf-8")

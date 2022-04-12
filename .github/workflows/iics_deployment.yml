@@ -7,19 +7,24 @@ on:
       - "main"
   workflow_dispatch:
 
+env:
+  IICS_LOGIN_URL: https://dm-us.informaticacloud.com
+  IICS_POD_URL: https://na1.dm-us.informaticacloud.com/saas
+ 
+  IICS_USERNAME: ${{ secrets.IICS_USERNAME }}
+  IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
+
+  # This is overriding until we connect the repository with a workflow_dispatch
+  COMMIT_HASH: 734d5b38e8151e697ffbb2f8105688a6015cb115
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   dev_build:
+    name: Review Development Code
+    environment:
+      name: development
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    env:
-      IICS_LOGIN_URL: https://dm-us.informaticacloud.com
-      IICS_POD_URL: https://na1.dm-us.informaticacloud.com/saas
-      IICS_USERNAME: ${{ secrets.IICS_USERNAME }}
-      IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
-      # This is overriding until we connect the repository with a workflow_dispatch
-      COMMIT_HASH: 187e6974986a0b92b45364b3dbe735e2f6eb41c1
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -40,8 +45,22 @@ jobs:
       - name: Login to development
         run: python ./scripts/infa_login.py
 
-      - name: Get committed mapping tasks
+      - name: Get and Test Committed Mapping Tasks
         run: python ./scripts/infa_get_updates.py
 
-      - name: Run test
-        run: echo Tests
+  uat_commit:
+    name: Complete uat promotion
+    environment:
+      name: uat
+    needs: dev_build
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          repository: tjohnsoninformatica/IICS-CDP-CICD-demo
+          ref: uat
+
+      - name: Commit changes
+        run: git checkout UAT | git cherry-pick -x ${COMMIT_HASH}

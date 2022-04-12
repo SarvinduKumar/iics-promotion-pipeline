@@ -12,8 +12,6 @@ on:
         required: true
         type: string 
 
-        
-
 env:
   IICS_LOGIN_URL: https://dm-us.informaticacloud.com
   IICS_POD_URL: https://na1.dm-us.informaticacloud.com/saas
@@ -75,4 +73,10 @@ jobs:
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
 
       - name: Commit changes
-        run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick -x ${COMMIT_HASH}
+        run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick -x ${COMMIT_HASH}; git push
+
+      - name: Get latest commit hash
+        run: echo "UAT_SHA=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
+
+      - name: Echo SHA
+        run: echo "$UAT_SHA"

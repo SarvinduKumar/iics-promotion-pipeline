@@ -19,6 +19,9 @@ env:
   IICS_USERNAME: ${{ secrets.IICS_USERNAME }}
   IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
 
+  UAT_IICS_USERNAME: ${{ secrets.UAT_IICS_USERNAME }}
+  UAT_IICS_PASSWORD: ${{ secrets.UAT_IICS_PASSWORD }}
+
   # This is overriding until we connect the repository with a workflow_dispatch
   COMMIT_HASH: f121e16b66071b77d1d7802bc1f1f5a6aa0bc6e5
 
@@ -61,13 +64,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v3
         with:
           repository: tjohnsoninformatica/IICS-CDP-CICD-demo
           ref: UAT
           token: ${{ secrets.GH_TOKEN }}
           path: IICS-CDP-CICD-demo
+
+      # Install python and dependent modules
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      
+      - name: Install python modules
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
 
       - name: Set default username
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
@@ -76,7 +88,7 @@ jobs:
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick -Xtheirs -x ${COMMIT_HASH}; git push
 
       - name: Get latest commit hash
-        run: cd ./IICS-CDP-CICD-demo; echo "UAT_SHA=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
+        run: cd ./IICS-CDP-CICD-demo; echo "UAT_COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
 
-      - name: Echo SHA
-        run: echo "$UAT_SHA"
+      - name: Pull and test deployment
+        run: python ./scripts/infa_update_and_test.py

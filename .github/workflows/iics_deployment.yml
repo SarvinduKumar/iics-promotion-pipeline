@@ -6,6 +6,13 @@ on:
     branches: 
       - "main"
   workflow_dispatch:
+    inputs:
+      committed_sha:
+        description: "Hash to deploy"
+        required: true
+        type: string 
+
+        
 
 env:
   IICS_LOGIN_URL: https://dm-us.informaticacloud.com
@@ -68,4 +75,4 @@ jobs:
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
 
       - name: Commit changes
-        run: cd ./IICS-CDP-CICD-demo; git fetch --all; git checkout UAT; git cherry-pick -x ${COMMIT_HASH}
+        run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick -x ${COMMIT_HASH}

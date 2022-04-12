@@ -73,6 +73,7 @@ jobs:
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
 
       - name: Commit changes
+        if: 0 != 0
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick --allow-empty -x ${COMMIT_HASH}; git push
 
       - name: Get latest commit hash

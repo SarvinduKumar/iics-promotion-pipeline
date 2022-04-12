@@ -65,4 +65,4 @@ jobs:
           path: IICS-CDP-CICD-demo
 
       - name: Commit changes
-        run: cd ./IICS-CDP-CICD-demo | git cherry-pick -x ${COMMIT_HASH}
+        run: cd ./IICS-CDP-CICD-demo; git cherry-pick -x ${COMMIT_HASH}

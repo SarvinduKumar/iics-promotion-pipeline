@@ -1,3 +1,10 @@
+name: SET_LOGIN_CREDENTIALS
+
+on:
+  workflow_dispatch:
+
+
+
 jobs:
   login:
     name: Set IICS Session Secrets

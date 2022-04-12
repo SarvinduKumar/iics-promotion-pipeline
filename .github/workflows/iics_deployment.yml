@@ -61,6 +61,7 @@ jobs:
         with:
           repository: tjohnsoninformatica/IICS-CDP-CICD-demo
           ref: uat
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Commit changes
         run: git checkout UAT | git cherry-pick -x ${COMMIT_HASH}

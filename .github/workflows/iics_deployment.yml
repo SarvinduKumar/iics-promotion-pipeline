@@ -64,5 +64,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: IICS-CDP-CICD-demo
 
+      - name: Set default username
+        run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
+
       - name: Commit changes
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git checkout UAT; git cherry-pick -x ${COMMIT_HASH}

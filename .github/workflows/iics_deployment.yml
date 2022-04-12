@@ -20,7 +20,7 @@ env:
   IICS_PASSWORD: ${{ secrets.IICS_PASSWORD }}
 
   # This is overriding until we connect the repository with a workflow_dispatch
-  COMMIT_HASH: 6da15882757a34264b6a03ddea8cf55f268447b9
+  COMMIT_HASH: e8bf51442c6042c87950db25caf44114cbfa5feb
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -73,7 +73,6 @@ jobs:
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
 
       - name: Commit changes
-        if: 0 != 0
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick --allow-empty -x ${COMMIT_HASH}; git push
 
       - name: Get latest commit hash

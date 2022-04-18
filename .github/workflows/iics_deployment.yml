@@ -51,7 +51,7 @@ jobs:
       - name: Login to development
         run: python ./scripts/infa_login.py
 
-      - name: Get and Test Committed Mapping Tasks
+      - name: Test Committed Mapping Tasks
         run: python ./scripts/infa_get_updates.py
 
   uat_commit:
@@ -86,14 +86,14 @@ jobs:
       - name: Set default username
         run: git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"
 
-      - name: Commit changes
+      - name: Commit changes to UAT
         run: cd ./IICS-CDP-CICD-demo; git fetch --all; git cherry-pick --strategy recursive -X theirs -x ${COMMIT_HASH}; git push
 
-      - name: Get latest commit hash
+      - name: Get latest UAT commit hash
         run: cd ./IICS-CDP-CICD-demo; echo "UAT_COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
       
-      - name: Login to development
+      - name: Login to UAT
         run: python ./iics-promotion-pipeline/scripts/infa_login.py
       
-      - name: Pull and test deployment
+      - name: Sync and test UAT deployment
         run: python ./iics-promotion-pipeline/scripts/infa_update_and_test.py

@@ -70,6 +70,8 @@ jobs:
           path: IICS-CDP-CICD-demo
 
       - uses: actions/checkout@v3
+        with:
+          path: iics-promotion-pipeline
 
       # Install python and dependent modules
       - uses: actions/setup-python@v3
@@ -91,4 +93,4 @@ jobs:
         run: cd ./IICS-CDP-CICD-demo; echo "UAT_COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
 
       - name: Pull and test deployment
-        run: python ./scripts/infa_update_and_test.py
+        run: python ./iics-promotion-pipeline/scripts/infa_update_and_test.py

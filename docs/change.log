@@ -8,6 +8,10 @@ Allowed statuses: Added, Changed, Fixed, Removed
 
 ## [Unreleased]
 
+
+
+## [0.1.0]
+
 ### Added
 Dev and UAT Stages
 Login script

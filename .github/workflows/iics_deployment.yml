@@ -91,6 +91,9 @@ jobs:
 
       - name: Get latest commit hash
         run: cd ./IICS-CDP-CICD-demo; echo "UAT_COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
-
+      
+      - name: Login to development
+        run: python ./iics-promotion-pipeline/scripts/infa_login.py
+      
       - name: Pull and test deployment
         run: python ./iics-promotion-pipeline/scripts/infa_update_and_test.py

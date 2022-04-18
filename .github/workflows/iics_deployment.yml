@@ -2,15 +2,12 @@ name: DEPLOY_MAPPING_TASK
 
 # Controls when the workflow will run
 on:
-  push:
-    branches: 
-      - "main"
   workflow_dispatch:
     inputs:
       committed_sha:
         description: "Hash to deploy"
         type: string
-        required: false
+        required: true
 
 env:
   IICS_LOGIN_URL: https://dm-us.informaticacloud.com
@@ -24,7 +21,7 @@ env:
 
   # This is overriding until we connect the repository with a workflow_dispatch
 
-  COMMIT_HASH: "${{ committed_sha == '' && 'f121e16b66071b77d1d7802bc1f1f5a6aa0bc6e5' || committed_sha }}"
+  COMMIT_HASH: committed_sha
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

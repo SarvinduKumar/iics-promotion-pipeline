@@ -14,7 +14,7 @@ HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": 
 BODY={ "commitHash": UAT_COMMIT_HASH }
 
 # Sync Github and UAT Org
-p = requests.post(URL + "/public/core/v3/pull", headers = HEADERS, json=BODY)
+p = requests.post(URL + "/public/core/v3/pullByCommitHash", headers = HEADERS, json=BODY)
 
 if p.status_code != 200:
     print("Exception caught: " + p.text)

@@ -13,6 +13,8 @@ HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": 
 
 BODY={ "commitHash": UAT_COMMIT_HASH }
 
+print("Syncing the commit " + UAT_COMMIT_HASH + " to the UAT repo")
+
 # Sync Github and UAT Org
 p = requests.post(URL + "/public/core/v3/pullByCommitHash", headers = HEADERS, json=BODY)
 
@@ -25,6 +27,7 @@ PULL_ACTION_ID = pull_json['pullActionId']
 PULL_STATUS = 'IN_PROGRESS'
 
 while PULL_STATUS == 'IN_PROGRESS':
+    print("Getting pull status from Informatica")
     time.sleep(10)
     ps = requests.get(URL + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
     pull_status_json = ps.json()

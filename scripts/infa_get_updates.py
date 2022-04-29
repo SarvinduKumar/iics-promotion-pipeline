@@ -49,3 +49,5 @@ for x in r_filtered:
     if STATE != 1:
         print("Mapping task: " + activity_log[0]['objectName'] + " failed. ")
         sys.exit(99)
+    else:
+        print("Mapping task: " + activity_log[0]['objectName'] + " completed successfully. ")

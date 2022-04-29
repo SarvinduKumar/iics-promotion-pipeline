@@ -20,6 +20,19 @@ if p.status_code != 200:
     print("Exception caught: " + p.text)
     sys.exit(99)
 
+pull_json = p.json()
+PULL_ACTION_ID = pull_json['pullActionId']
+PULL_STATUS = 0
+
+while PULL_STATUS == 'IN_PROGRESS':
+    ps = requests.get(URL + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
+    pull_status_json = ps.json()
+    PULL_STATUS = pull_status_json['state']
+
+if PULL_STATUS != 'SUCCESSFUL':
+    print('Exception caught: Pull was not successful')
+    sys.exit(99)
+
 # Get all the objects for commit
 r = requests.get(URL + "/public/core/v3/commit/" + UAT_COMMIT_HASH, headers = HEADERS)
 

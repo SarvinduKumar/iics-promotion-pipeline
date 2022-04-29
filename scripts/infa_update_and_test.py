@@ -22,12 +22,15 @@ if p.status_code != 200:
 
 pull_json = p.json()
 PULL_ACTION_ID = pull_json['pullActionId']
-PULL_STATUS = 0
+PULL_STATUS = 'IN_PROGRESS'
 
 while PULL_STATUS == 'IN_PROGRESS':
+    time.sleep(10)
     ps = requests.get(URL + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
     pull_status_json = ps.json()
-    PULL_STATUS = pull_status_json['state']
+    PULL_STATUS = pull_status_json['status']['state']
+
+
 
 if PULL_STATUS != 'SUCCESSFUL':
     print('Exception caught: Pull was not successful')

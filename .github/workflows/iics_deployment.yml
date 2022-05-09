@@ -51,9 +51,6 @@ jobs:
       - name: Login to development
         run: python ./scripts/infa_login.py
 
-      - name: Session Mask
-        run: echo "::add-mask::${{ env.sessionId }}"
-
       - name: Test Committed Mapping Tasks
         run: python ./scripts/infa_get_updates.py
 

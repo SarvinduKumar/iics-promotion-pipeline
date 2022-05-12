@@ -53,6 +53,11 @@ jobs:
         run: |
             python -m pip install --upgrade pip
             pip install -r requirements.txt
+      
+      - name: Session mask
+        run: |
+            echo "::add-mask::${{ env.sessionId }}"
+            echo "::add-mask::${{ env.uat_sessionId }}"
 
       # Runs a single command using the runners shell
       - name: Login to development

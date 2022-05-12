@@ -54,6 +54,13 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 
+      - name: Create temp mask
+        run: |
+            SECRET="This string"
+            echo "::add-mask::$SECRET"
+            echo "::set-output name=test_mask::$SECRET"
+            cat $GITHUB_ENV
+
       # Runs a single command using the runners shell
       - name: Login to development
         run: |

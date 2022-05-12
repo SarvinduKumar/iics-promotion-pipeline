@@ -56,10 +56,8 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Login to development
-        run: python ./scripts/infa_login.py
-
-      - name: Session mask
         run: |
+            python ./scripts/infa_login.py
             echo "::add-mask::${{ env.sessionId }}"
             echo "::add-mask::${{ env.uat_sessionId }}"
 
@@ -105,7 +103,10 @@ jobs:
         run: cd ./IICS-CDP-CICD-demo; git pull; echo "UAT_COMMIT_HASH=$(git log -1 --pretty=format:%H)" >> $GITHUB_ENV
       
       - name: Login to UAT
-        run: python ./iics-promotion-pipeline/scripts/infa_login.py
+        run: |
+            python ./iics-promotion-pipeline/scripts/infa_login.py
+            echo "::add-mask::${{ env.sessionId }}"
+            echo "::add-mask::${{ env.uat_sessionId }}"
       
       - name: Sync and test UAT deployment
         run: python ./iics-promotion-pipeline/scripts/infa_update_and_test.py

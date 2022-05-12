@@ -54,13 +54,6 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 
-      - name: Create temp mask
-        run: |
-            SECRET="This string"
-            echo "::add-mask::$SECRET"
-            echo "::set-output name=test_mask::$SECRET"
-            cat $GITHUB_ENV
-
       # Runs a single command using the runners shell
       - name: Login to development
         run: |
@@ -110,8 +103,6 @@ jobs:
       - name: Login to UAT
         run: |
             python ./iics-promotion-pipeline/scripts/infa_login.py
-            echo "::add-mask::${{ env.sessionId }}"
-            echo "::add-mask::${{ env.uat_sessionId }}"
-      
+
       - name: Sync and test UAT deployment
         run: python ./iics-promotion-pipeline/scripts/infa_update_and_test.py

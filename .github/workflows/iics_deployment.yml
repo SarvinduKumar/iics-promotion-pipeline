@@ -58,6 +58,7 @@ jobs:
       - name: Login to development
         run: |
             python ./scripts/infa_login.py
+            env
             echo "::add-mask::${sessionId}"
             echo "::set-output name=sessiondId::$sessionId"
             echo "::add-mask::${uat_sessionId}"

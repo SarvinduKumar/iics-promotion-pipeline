@@ -58,8 +58,10 @@ jobs:
       - name: Login to development
         run: |
             python ./scripts/infa_login.py
-            echo "::add-mask::${{ env.sessionId }}"
-            echo "::add-mask::${{ env.uat_sessionId }}"
+            echo "::add-mask::$sessionId"
+            echo "::set-output name=sessiondId::$sessionId"
+            echo "::add-mask::$uat_sessionId"
+            echo "::set-output name=uat_sessionId::$uat_sessionId"
 
       - name: Test Committed Mapping Tasks
         run: python ./scripts/infa_get_updates.py

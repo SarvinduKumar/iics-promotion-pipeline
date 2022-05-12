@@ -34,14 +34,15 @@ if u.status_code != 200:
 data = r.json()
 uat_data = u.json()
 
-env_file = os.getenv('GITHUB_ENV')
 
-with open(env_file, "a") as myfile:
-    myfile.write("sessionId=" + data['userInfo']['sessionId'] + "\n")
-    myfile.write("uat_sessionId=" + uat_data['userInfo']['sessionId'] + "\n")
-    myfile.write("SOME_TOKEN=Testing Masking" + "\n")
-    myfile.write("::add-mask::session=Other Testing" + "\n")
-    myfile.write("session2::add-mask::=Add Testing")
+#env_file = os.getenv('GITHUB_ENV')
+
+#with open(env_file, "a") as myfile:
+#    myfile.write("sessionId=" + data['userInfo']['sessionId'] + "\n")
+#    myfile.write("uat_sessionId=" + uat_data['userInfo']['sessionId'] + "\n")
+
+os.environ['sessionId'] = data['userInfo']['sessionId']
+os.environ['uat_sessionId'] = uat_data['userInfo']['sessionId']
 
 #public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
 #sealed_box = public.SealedBox(public_key)

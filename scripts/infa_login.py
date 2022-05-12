@@ -34,18 +34,9 @@ if u.status_code != 200:
 data = r.json()
 uat_data = u.json()
 
-
+# Set session tokens to the environment
 env_file = os.getenv('GITHUB_ENV')
 
-with open(env_file, 'r') as f:
-    print(f.read())
-
 with open(env_file, "a") as myfile:
-    myfile.write("sessionId=" + data['userInfo']['sessionId'] + "\n")
+    myfile.write("sessionId=::add-mask::" + data['userInfo']['sessionId'] + "\n")
     myfile.write("uat_sessionId=" + uat_data['userInfo']['sessionId'] + "\n")
-
-
-#public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-#sealed_box = public.SealedBox(public_key)
-#encrypted = sealed_box.encrypt(data['userInfo']['sessionId'].encode("utf-8"))
-#b64encode(encrypted).decode("utf-8")

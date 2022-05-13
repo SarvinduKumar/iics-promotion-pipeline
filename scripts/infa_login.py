@@ -34,8 +34,6 @@ if u.status_code != 200:
 data = r.json()
 uat_data = u.json()
 
-print(data['userInfo']['sessionId'])
-
 # Set session tokens to the environment
 env_file = os.getenv('GITHUB_ENV')
 

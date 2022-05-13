@@ -34,11 +34,11 @@ if u.status_code != 200:
 data = r.json()
 uat_data = u.json()
 
+print(data['userInfo']['sessionId'])
+
 # Set session tokens to the environment
 env_file = os.getenv('GITHUB_ENV')
 
 with open(env_file, "a") as myfile:
     myfile.write("sessionId=" + data['userInfo']['sessionId'] + "\n")
     myfile.write("uat_sessionId=" + uat_data['userInfo']['sessionId'] + "\n")
-    myfile.write("WEBHOOK_TOKEN=TESTTOKEN" + "\n")
-    myfile.write("WEBHOOK_TOKEN_STAGE=TESTTOKEN2" + "\n")

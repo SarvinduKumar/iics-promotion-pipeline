@@ -87,4 +87,4 @@ for x in r_filtered:
     else:
         print("Mapping task: " + activity_log[0]['objectName'] + " completed successfully. ")
 
-requests.post(URL + "/public/core/v3/logout", headers = HEADERS)
+    requests.post(URL + "/public/core/v3/logout", headers = HEADERS)

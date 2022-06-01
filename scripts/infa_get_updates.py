@@ -7,20 +7,25 @@
 
 import requests
 import os
-import json
-import time
 import sys
+from scripts.helper_functions import iics_login
+from scripts.testing_functions import test_mtt
 
-URL = os.environ['IICS_POD_URL']
-SESSION_ID = os.environ['sessionId']
 COMMIT_HASH = os.environ['COMMIT_HASH']
 
+LOGIN_URL = os.environ['IICS_LOGIN_URL']
+POD_URL =  os.environ['IICS_POD_URL']
+
+IICS_USERNAME = os.environ['IICS_LOGIN_URL']
+IICS_PASSWORD = os.environ['IICS_LOGIN_URL']
+
+SESSION_ID = iics_login(LOGIN_URL, IICS_USERNAME, IICS_PASSWORD )
+
 HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": SESSION_ID }
-HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": SESSION_ID }
 
 print('Getting all objects for the commit: ' + COMMIT_HASH)
 # Get all the objects for commit
-r = requests.get(URL + "/public/core/v3/commit/" + COMMIT_HASH, headers = HEADERS)
+r = requests.get(POD_URL + "/public/core/v3/commit/" + COMMIT_HASH, headers = HEADERS)
 
 if r.status_code != 200:
     print("Exception caught: " + r.text)
@@ -33,31 +38,11 @@ r_filtered = [x for x in request_json['changes'] if ( x['type'] == 'MTT') ]
 
 # This loop runs tests for each one of the mapping tasks
 for x in r_filtered:
-    BODY = {"@type": "job","taskId": x['appContextId'],"taskType": "MTT"}
-    t = requests.post(URL + "/api/v2/job/", headers = HEADERS_V2, json = BODY )
 
-    if t.status_code != 200:
-        print("Exception caught: " + t.text)
-        sys.exit(99)
+    state = test_mtt(POD_URL, SESSION_ID, x['app_context_id'])
 
-    test_json = t.json()
-    PARAMS = "?runId=" + str(test_json['runId'])
-    #"?taskId=" + test_json['taskId']
+    if state != 0:
+        print("Testing failed")
+        exit(99)
 
-    STATE=0
-    
-    while STATE == 0:
-        time.sleep(60)
-        a = requests.get(URL + "/api/v2/activity/activityLog" + PARAMS, headers = HEADERS_V2)
-        
-        activity_log = a.json()
-
-        STATE = activity_log[0]['state']
-
-    if STATE != 1:
-        print("Mapping task: " + activity_log[0]['objectName'] + " failed. ")
-        sys.exit(99)
-    else:
-        print("Mapping task: " + activity_log[0]['objectName'] + " completed successfully. ")
-
-requests.post(URL + "/public/core/v3/logout", headers = HEADERS)
+requests.post(POD_URL + "/public/core/v3/logout", headers = HEADERS)

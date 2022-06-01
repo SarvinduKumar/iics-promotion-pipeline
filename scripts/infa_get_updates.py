@@ -8,16 +8,17 @@
 import requests
 import os
 import sys
-from scripts.helper_functions import iics_login
-from scripts.testing_functions import test_mtt
+import json
+from helper_functions import iics_login
+from testing_functions import test_mtt
 
 COMMIT_HASH = os.environ['COMMIT_HASH']
 
 LOGIN_URL = os.environ['IICS_LOGIN_URL']
 POD_URL =  os.environ['IICS_POD_URL']
 
-IICS_USERNAME = os.environ['IICS_LOGIN_URL']
-IICS_PASSWORD = os.environ['IICS_LOGIN_URL']
+IICS_USERNAME = os.environ['IICS_USERNAME']
+IICS_PASSWORD = os.environ['IICS_PASSWORD']
 
 SESSION_ID = iics_login(LOGIN_URL, IICS_USERNAME, IICS_PASSWORD )
 
@@ -38,8 +39,7 @@ r_filtered = [x for x in request_json['changes'] if ( x['type'] == 'MTT') ]
 
 # This loop runs tests for each one of the mapping tasks
 for x in r_filtered:
-
-    state = test_mtt(POD_URL, SESSION_ID, x['app_context_id'])
+    state = test_mtt(POD_URL, SESSION_ID, x['appContextId'])
 
     if state != 0:
         print("Testing failed")

@@ -9,7 +9,7 @@
 
 import requests
 
-def iics_login(login_domain, iics_username, iics_password)
+def iics_login(login_domain, iics_username, iics_password):
 
     URL = "https://dm-us.informaticacloud.com/saas/public/core/v3/login"
     BODY = {"username": iics_username,"password": iics_password}

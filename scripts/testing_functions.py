@@ -11,7 +11,7 @@ import json
 import time
 import sys
 
-def test_mtt(url, session_id, app_context_id)
+def test_mtt(url, session_id, app_context_id):
 
     HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": session_id }
     BODY = {"@type": "job","taskId": app_context_id,"taskType": "MTT"}
@@ -30,7 +30,7 @@ def test_mtt(url, session_id, app_context_id)
     
     while STATE == 0:
         time.sleep(60)
-        a = requests.get(URL + "/api/v2/activity/activityLog" + PARAMS, headers = HEADERS_V2)
+        a = requests.get(url + "/api/v2/activity/activityLog" + PARAMS, headers = HEADERS_V2)
         
         activity_log = a.json()
 
@@ -41,6 +41,6 @@ def test_mtt(url, session_id, app_context_id)
         RC = 99
     else:
         print("Mapping task: " + activity_log[0]['objectName'] + " completed successfully. ")
-        RC = 1
+        RC = 0
 
     return RC

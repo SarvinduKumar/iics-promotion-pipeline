@@ -34,7 +34,10 @@ pipeline {
                 }
 
                 sh 'git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"'
-                sh "cd ./codeDir/; git fetch --all; git cherry-pick --strategy=recursive -X theirs ${COMMIT_HASH}; git push --set-upstream origin UAT" 
+                
+                withCredentials([gitUsernamePassword(credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', gitToolName: 'Default')]) {
+                    sh "cd ./codeDir/; git fetch --all; git cherry-pick --strategy=recursive -X theirs ${COMMIT_HASH}; git push --set-upstream origin UAT" 
+                }
             }
         }
     }

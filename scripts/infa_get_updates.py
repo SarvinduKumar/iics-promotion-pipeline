@@ -30,7 +30,7 @@ r = requests.get(POD_URL + "/public/core/v3/commit/" + COMMIT_HASH, headers = HE
 
 if r.status_code != 200:
     print("Exception caught: " + r.text)
-    sys.exit(99)
+    exit(99)
     
 request_json = r.json()
 

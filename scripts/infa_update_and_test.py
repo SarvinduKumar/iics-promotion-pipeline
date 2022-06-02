@@ -10,48 +10,29 @@ import os
 import json
 import time
 import sys
+from helper_functions import iics_login, iics_pull_by_commit
+from testing_functions import test_mtt
 
-URL = os.environ['IICS_POD_URL']
-UAT_SESSION_ID = os.environ['uat_sessionId']
 UAT_COMMIT_HASH = os.environ['UAT_COMMIT_HASH']
 
-HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": UAT_SESSION_ID }
-HEADERS_V2 = {"Content-Type": "application/json; charset=utf-8", "icSessionId": UAT_SESSION_ID }
+LOGIN_URL = os.environ['IICS_LOGIN_URL']
+URL = os.environ['IICS_POD_URL']
 
-BODY={ "commitHash": UAT_COMMIT_HASH }
+UAT_IICS_USERNAME = os.environ['IICS_USERNAME']
+UAT_IICS_PASSWORD = os.environ['IICS_PASSWORD']
 
-print("Syncing the commit " + UAT_COMMIT_HASH + " to the UAT repo")
+SESSION_ID = iics_login(LOGIN_URL, UAT_IICS_USERNAME, UAT_IICS_PASSWORD )
 
-# Sync Github and UAT Org
-p = requests.post(URL + "/public/core/v3/pullByCommitHash", headers = HEADERS, json=BODY)
+HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": SESSION_ID }
 
-if p.status_code != 200:
-    print("Exception caught: " + p.text)
-    sys.exit(99)
-
-pull_json = p.json()
-PULL_ACTION_ID = pull_json['pullActionId']
-PULL_STATUS = 'IN_PROGRESS'
-
-while PULL_STATUS == 'IN_PROGRESS':
-    print("Getting pull status from Informatica")
-    time.sleep(10)
-    ps = requests.get(URL + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
-    pull_status_json = ps.json()
-    PULL_STATUS = pull_status_json['status']['state']
-
-
-
-if PULL_STATUS != 'SUCCESSFUL':
-    print('Exception caught: Pull was not successful')
-    sys.exit(99)
+iics_pull_by_commit(URL, SESSION_ID, UAT_COMMIT_HASH)
 
 # Get all the objects for commit
 r = requests.get(URL + "/public/core/v3/commit/" + UAT_COMMIT_HASH, headers = HEADERS)
 
 if r.status_code != 200:
     print("Exception caught: " + r.text)
-    sys.exit(99)
+    exit(99)
     
 request_json = r.json()
 
@@ -59,32 +40,12 @@ request_json = r.json()
 r_filtered = [x for x in request_json['changes'] if ( x['type'] == 'MTT') ]
 
 # This loop runs tests for each one of the mapping tasks
+# This loop runs tests for each one of the mapping tasks
 for x in r_filtered:
-    BODY = {"@type": "job","taskId": x['appContextId'],"taskType": "MTT"}
-    t = requests.post(URL + "/api/v2/job/", headers = HEADERS_V2, json = BODY )
+    state = test_mtt(URL, SESSION_ID, x['appContextId'])
 
-    if t.status_code != 200:
-        print("Exception caught: " + t.text)
-        sys.exit(99)
+    if state != 0:
+        print("Testing failed")
+        exit(99)
 
-    test_json = t.json()
-    PARAMS = "?runId=" + str(test_json['runId'])
-    #"?taskId=" + test_json['taskId']
-
-    STATE=0
-    
-    while STATE == 0:
-        time.sleep(60)
-        a = requests.get(URL + "/api/v2/activity/activityLog" + PARAMS, headers = HEADERS_V2)
-        
-        activity_log = a.json()
-
-        STATE = activity_log[0]['state']
-
-    if STATE != 1:
-        print("Mapping task: " + activity_log[0]['objectName'] + " failed. ")
-        sys.exit(99)
-    else:
-        print("Mapping task: " + activity_log[0]['objectName'] + " completed successfully. ")
-
-    requests.post(URL + "/public/core/v3/logout", headers = HEADERS)
+requests.post(URL + "/public/core/v3/logout", headers = HEADERS)

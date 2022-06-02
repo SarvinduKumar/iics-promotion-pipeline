@@ -8,6 +8,9 @@
 ### This file contains helper functions used throughout the iics promotion pipeline
 
 import requests
+import time
+import sys
+import json
 
 def iics_login(login_domain, iics_username, iics_password):
 
@@ -24,3 +27,34 @@ def iics_login(login_domain, iics_username, iics_password):
 
     # return sessionId
     return data['userInfo']['sessionId']
+
+def iics_pull_by_commit(url, session_id, commit_hash):
+        
+    HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
+    BODY={ "commitHash": commit_hash}
+
+    print("Syncing the commit " + commit_hash + " to the UAT repo")
+
+    # Sync Github and UAT Org
+    p = requests.post(url + "/public/core/v3/pullByCommitHash", headers = HEADERS, json=BODY)
+
+    if p.status_code != 200:
+        print("Exception caught: " + p.text)
+        return 99
+
+    pull_json = p.json()
+    PULL_ACTION_ID = pull_json['pullActionId']
+    PULL_STATUS = 'IN_PROGRESS'
+
+    while PULL_STATUS == 'IN_PROGRESS':
+        print("Getting pull status from Informatica")
+        time.sleep(10)
+        ps = requests.get(url + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
+        pull_status_json = ps.json()
+        PULL_STATUS = pull_status_json['status']['state']
+
+    if PULL_STATUS != 'SUCCESSFUL':
+        print('Exception caught: Pull was not successful')
+        return 99
+    else:
+        return 0

@@ -11,7 +11,7 @@ pipeline {
         UAT_IICS_CREDS      = credentials('2dde2124-cb68-407f-8287-dc25c0e8ef3e')
         UAT_IICS_USERNAME   = "${UAT_IICS_CREDS_USR}"
         UAT_IICS_PASSWORD   = "${UAT_IICS_CREDS_PSW}"
-        COMMIT_HASH         = "2b073794066cd978b518ee63a08987eb231be828"
+        COMMIT_HASH         = "9c05b41"
     }
 
 
@@ -37,8 +37,9 @@ pipeline {
                 
                 withCredentials([gitUsernamePassword(credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', gitToolName: 'Default')]) {
                     sh "cd ./codeDir/; git fetch --all; git cherry-pick --strategy=recursive -X theirs ${COMMIT_HASH}; git push --set-upstream origin UAT" 
+                    env.UAT_COMMIT_HASH = sh(script:'cd ./codeDir/; git pull; echo $(git log -1 --pretty=format:%H)', returnStdout: true).trim()
                 }
-
+            
                 sh 'python3 ./promotionDir/scripts/infa_update_and_test.py'
             }
         }

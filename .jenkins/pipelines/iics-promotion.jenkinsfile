@@ -20,7 +20,7 @@ pipeline {
             steps {
                 git branch: 'feature-jenkins-compatibility', changelog: false, credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', poll: false, url: 'https://github.com/brandon-bird-inf/iics-promotion-pipeline'
                 sh 'python3 ./scripts/infa_get_updates.py'
-
+                input 'Do you approve this deploy?'
             }
         }
         stage('Promote to UAT') {
@@ -38,6 +38,8 @@ pipeline {
                 withCredentials([gitUsernamePassword(credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', gitToolName: 'Default')]) {
                     sh "cd ./codeDir/; git fetch --all; git cherry-pick --strategy=recursive -X theirs ${COMMIT_HASH}; git push --set-upstream origin UAT" 
                 }
+
+                sh 'python3 ./promotionDir/scripts/infa_update_and_test.py'
             }
         }
     }

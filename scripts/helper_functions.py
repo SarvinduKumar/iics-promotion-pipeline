@@ -73,6 +73,8 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
     commit_json = r.json()
     PREVIOUS_COMMIT_HASH = commit_json['commits'][1]['hash']
 
+    print("Rolling back to previous HASH: " + PREVIOUS_COMMIT_HASH)
+
     SUCCESS = iics_pull_by_commit(url, session_id, PREVIOUS_COMMIT_HASH)
 
     return SUCCESS

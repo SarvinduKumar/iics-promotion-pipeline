@@ -16,4 +16,8 @@ MAPPING_TASK_NAME = os.environ['MAPPING_TASK']
 
 SESSION_ID = iics_login(LOGIN_URL, UAT_IICS_USERNAME, UAT_IICS_PASSWORD)
 
-iics_rollback_mapping(POD_URL, SESSION_ID, PROJECT_NAME, MAPPING_TASK_NAME)
+SUCCESS = iics_rollback_mapping(POD_URL, SESSION_ID, PROJECT_NAME, MAPPING_TASK_NAME)
+
+if SUCCESS != 0:
+    print("Unable to rollback to previous version")
+    exit(99)

@@ -17,9 +17,7 @@ pipeline {
     stages { 
         stage('Test Development Code') {
             steps {
-                input message: 'Input Project Name and Mapping Task', parameters: [string(name: 'Project Name', trim: true), string(name: 'Mapping Task Name', trim: true)]
-                
-                println(userInput)
+                def userInput = input message: 'Input Project Name and Mapping Task', parameters: [string(name: 'Project Name', trim: true), string(name: 'Mapping Task Name', trim: true)]
                 
                 script { 
                     env.PROJECT_NAME = userInput['Project Name']

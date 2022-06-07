@@ -27,9 +27,6 @@ pipeline {
                     env.MAPPING_TASK = userInput['Mapping Task Name']
                 }
 
-                export PROJECT NAME=${PROJECT_NAME}
-                export MAPPING TASK=${MAPPING_TASK}
-
                 sh 'python3 ./scripts/rollback_mapping.py'
             }
         }

@@ -59,23 +59,60 @@ def iics_pull_by_commit(url, session_id, commit_hash):
     else:
         return 0
 
+def iics_pull_by_commit_object(url, session_id, commit_hash, object_id):
+        
+    HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
+    BODY={ "commitHash": commit_hash, "objects": [ { "id": object_id } ] }
+
+    print("Syncing the commit " + commit_hash + " to the UAT ORG for object: " + object_id)
+
+    # Sync Github and UAT Org
+    p = requests.post(url + "/public/core/v3/pull", headers = HEADERS, json=BODY)
+
+    if p.status_code != 200:
+        print("Exception caught: " + p.text)
+        return 99
+
+    pull_json = p.json()
+    PULL_ACTION_ID = pull_json['pullActionId']
+    PULL_STATUS = 'IN_PROGRESS'
+
+    while PULL_STATUS == 'IN_PROGRESS':
+        print("Getting pull status from Informatica")
+        time.sleep(10)
+        ps = requests.get(url + '/public/core/v3/sourceControlAction/' + PULL_ACTION_ID, headers = HEADERS, json=BODY)
+        pull_status_json = ps.json()
+        PULL_STATUS = pull_status_json['status']['state']
+
+    if PULL_STATUS != 'SUCCESSFUL':
+        print('Exception caught: Pull was not successful')
+        return 99
+    else:
+        return 0
+
 
 def iics_rollback_mapping(url, session_id, project_name, mapping_name):
 
     HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
+    QUERY = "path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'"
 
-    r = requests.get(url + "/public/core/v3/commitHistory?q=path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'", headers = HEADERS)
+    r = requests.get(url + "/public/core/v3/commitHistory?q=" + QUERY, headers = HEADERS)
 
     if r.status_code != 200:
         print("Exception caught: " + r.text)
         return 99
 
+    o = requests.get(url + "/public/core/v3/objects?q=" + QUERY, headers = HEADERS)
+
     commit_json = r.json()
+    object_json = o.json()
+
     PREVIOUS_COMMIT_HASH = commit_json['commits'][1]['hash']
+    OBJECT_ID = object_json['objects'][0]['id']
 
     print("Rolling back to previous HASH: " + PREVIOUS_COMMIT_HASH)
 
-    SUCCESS = iics_pull_by_commit(url, session_id, PREVIOUS_COMMIT_HASH)
+    SUCCESS = iics_pull_by_commit_object(url, session_id, PREVIOUS_COMMIT_HASH, OBJECT_ID)
 
     return SUCCESS
 

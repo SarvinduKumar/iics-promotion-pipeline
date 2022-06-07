@@ -64,7 +64,6 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
 
     HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
 
-    print("Rolling back: /" + project_name + "/" + mapping_name)
     r = requests.get(url + "/public/core/v3/commitHistory?q=path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'", headers = HEADERS)
 
     if r.status_code != 200:

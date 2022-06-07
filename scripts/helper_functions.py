@@ -58,3 +58,23 @@ def iics_pull_by_commit(url, session_id, commit_hash):
         return 99
     else:
         return 0
+
+
+def iics_rollback_mapping(url, session_id, project_name, mapping_name):
+
+    HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
+
+    r = requests.get(url + "/public/core/v3/commitHistory?q=path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'", headers = HEADERS)
+
+    if r.status_code != 200:
+        print("Exception caught: " + r.text)
+        return 99
+
+    commit_json = r.json()
+    PREVIOUS_COMMIT_HASH = commit_json['commits'][1]['hash']
+
+    SUCCESS = iics_pull_by_commit(url, session_id, PREVIOUS_COMMIT_HASH)
+
+    return SUCCESS
+
+    

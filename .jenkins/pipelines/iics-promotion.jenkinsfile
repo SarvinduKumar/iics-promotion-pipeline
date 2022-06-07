@@ -40,7 +40,6 @@ pipeline {
                 }
 
                 script {
-                    sh 'cd ./codeDir/; git checkout UAT; git pull'
                     env.UAT_COMMIT_HASH = sh(script:'cd ./codeDir/; echo $(git log -1 --pretty=format:%H)', returnStdout: true).trim()
                 }
                         

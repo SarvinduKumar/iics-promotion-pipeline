@@ -95,6 +95,7 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
 
     HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
     QUERY = "path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'"
+    BODY = { "objects": [ { "path": project_name + "/" + mapping_name, "type": "DTEMPLATE" }]}
 
     r = requests.get(url + "/public/core/v3/commitHistory?q=" + QUERY, headers = HEADERS)
 
@@ -102,7 +103,10 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
         print("Exception caught: " + r.text)
         return 99
 
-    o = requests.get(url + "/public/core/v3/objects?q=" + QUERY, headers = HEADERS)
+    o = requests.post(url + "/public/core/v3/lookup", headers = HEADERS, json = BODY)
+    if o.status_code != 200:
+        print("Exception caught: " + o.text)
+        return 99
 
     commit_json = r.json()
     object_json = o.json()
@@ -115,5 +119,4 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
     SUCCESS = iics_pull_by_commit_object(url, session_id, PREVIOUS_COMMIT_HASH, OBJECT_ID)
 
     return SUCCESS
-
     

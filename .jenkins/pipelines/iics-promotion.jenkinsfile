@@ -25,6 +25,8 @@ pipeline {
         }
         stage('Promote to UAT') {
             steps {
+                echo "Testing: ${params.hash}"
+
                 dir('./promotionDir') {
                     git branch: 'feature-jenkins-compatibility', changelog: false, credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', poll: false, url: 'https://github.com/brandon-bird-inf/iics-promotion-pipeline'
                 }

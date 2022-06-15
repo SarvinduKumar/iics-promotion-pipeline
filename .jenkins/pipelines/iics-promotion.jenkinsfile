@@ -11,7 +11,7 @@ pipeline {
         UAT_IICS_CREDS      = credentials('2dde2124-cb68-407f-8287-dc25c0e8ef3e')
         UAT_IICS_USERNAME   = "${UAT_IICS_CREDS_USR}"
         UAT_IICS_PASSWORD   = "${UAT_IICS_CREDS_PSW}"
-        COMMIT_HASH         = params.hash
+        COMMIT_HASH         = "${params.hash}"
     }
 
 

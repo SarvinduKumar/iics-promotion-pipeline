@@ -29,7 +29,7 @@ def test_mtt(url, session_id, app_context_id):
     STATE=0
     
     while STATE == 0:
-        time.sleep(60)
+        time.sleep(20)
         a = requests.get(url + "/api/v2/activity/activityLog" + PARAMS, headers = HEADERS_V2)
         
         activity_log = a.json()

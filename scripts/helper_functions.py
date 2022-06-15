@@ -43,9 +43,6 @@ def iics_pull_by_commit(url, session_id, commit_hash):
         return 99
 
     pull_json = p.json()
-
-    print(pull_json)
-    
     PULL_ACTION_ID = pull_json['pullActionId']
     PULL_STATUS = 'IN_PROGRESS'
 

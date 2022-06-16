@@ -1,0 +1,51 @@
+pipeline {
+
+    agent any
+
+    environment {
+        IICS_LOGIN_URL      = 'https://dm-us.informaticacloud.com'
+        IICS_POD_URL        = 'https://na1.dm-us.informaticacloud.com/saas'
+        IICS_CREDS          = credentials('8672bf17-6c59-44b2-8aa7-a93122ef3631')
+        IICS_USERNAME       = "${IICS_CREDS_USR}"
+        IICS_PASSWORD       = "${IICS_CREDS_PSW}"
+        UAT_IICS_CREDS      = credentials('2dde2124-cb68-407f-8287-dc25c0e8ef3e')
+        UAT_IICS_USERNAME   = "${UAT_IICS_CREDS_USR}"
+        UAT_IICS_PASSWORD   = "${UAT_IICS_CREDS_PSW}"
+        COMMIT_HASH         = "${params.hash}"
+    }
+
+
+    stages { 
+        stage('Test Development Code') {
+            steps {
+                git branch: 'feature-jenkins-compatibility', changelog: false, credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', poll: false, url: 'https://github.com/brandon-bird-inf/iics-promotion-pipeline'
+                echo "Testing: ${params.hash}"
+                sh 'python3 ./scripts/infa_get_updates.py'
+                input 'Do you approve this deploy?'
+            }
+        }
+        stage('Promote to UAT') {
+            steps {               
+                dir('./promotionDir') {
+                    git branch: 'feature-jenkins-compatibility', changelog: false, credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', poll: false, url: 'https://github.com/brandon-bird-inf/iics-promotion-pipeline'
+                }
+
+                dir('./codeDir') {
+                    git branch: 'UAT', changelog: false, credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', poll: false, url: 'https://github.com/tjohnsoninformatica/IICS-CDP-CICD-demo'
+                }
+
+                sh 'git config --global user.email "bbird@informatica.com"; git config --global user.name "Brandon Bird"'
+                
+                withCredentials([gitUsernamePassword(credentialsId: '528cfcef-8f74-462b-ac2e-c96c2097d632', gitToolName: 'Default')]) {
+                    sh "cd ./codeDir/; git fetch --all; git cherry-pick --strategy=recursive -X theirs ${COMMIT_HASH}; git push --set-upstream origin UAT" 
+                }
+
+                script {
+                    env.UAT_COMMIT_HASH = sh(script:'cd ./codeDir/; echo $(git log -1 --pretty=format:%H)', returnStdout: true).trim()
+                }
+                        
+                sh 'python3 ./promotionDir/scripts/infa_update_and_test.py'
+            }
+        }
+    }
+}   

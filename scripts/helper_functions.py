@@ -102,6 +102,9 @@ def iics_rollback_mapping(url, session_id, project_name, mapping_name):
     QUERY = "path=='" + safe_project_name + "/" + mapping_name + "' and type=='DTemplate'"
     BODY = { "objects": [ { "path": safe_project_name + "/" + mapping_name, "type": "DTEMPLATE" }]}
 
+    print(QUERY)
+    print(BODY)
+
     r = requests.get(url + "/public/core/v3/commitHistory?q=" + QUERY, headers = HEADERS)
 
     if r.status_code != 200:

@@ -20,10 +20,10 @@ pipeline {
                 script { 
                     def userInput = input(
                         message: 'Input Project Name and Mapping Task',
-                        parameters: [string(name: 'Project Name', trim: true), string(name: 'Object Name', trim: true)
+                        parameters: [string(name: 'Path Name', trim: true), string(name: 'Object Name', trim: true)
                     ])
                 
-                    env.PROJECT_NAME = userInput['Project Name']
+                    env.PATH_NAME = userInput['Path Name']
                     env.OBJECT_NAME = userInput['Object Name']
                 }
 

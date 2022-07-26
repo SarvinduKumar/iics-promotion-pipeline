@@ -93,17 +93,12 @@ def iics_pull_by_commit_object(url, session_id, commit_hash, object_id):
         return 0
 
 
-def iics_rollback_mapping(url, session_id, project_name, mapping_name):
-
-    safe_project_name=urllib.parse.quote(project_name)
+def iics_rollback_mapping(url, session_id, path_name, mapping_name):
 
     HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
     ### In query/body, the Type would need parameterized to rollback various object types
-    QUERY = "path=='" + safe_project_name + "/" + mapping_name + "' and type=='DTemplate'"
-    BODY = { "objects": [ { "path": safe_project_name + "/" + mapping_name, "type": "DTEMPLATE" }]}
-
-    print(QUERY)
-    print(BODY)
+    QUERY = "path=='" + path_name + "/" + mapping_name + "' and type=='DTemplate'"
+    BODY = { "objects": [ { "path": path_name + "/" + mapping_name, "type": "DTEMPLATE" }]}
 
     r = requests.get(url + "/public/core/v3/commitHistory?q=" + QUERY, headers = HEADERS)
 

@@ -94,6 +94,7 @@ def iics_pull_by_commit_object(url, session_id, commit_hash, object_id):
 def iics_rollback_mapping(url, session_id, project_name, mapping_name):
 
     HEADERS = {"Content-Type": "application/json; charset=utf-8", "INFA-SESSION-ID": session_id }
+    ### In query/body, the Type would need parameterized to rollback various object types
     QUERY = "path=='" + project_name + "/" + mapping_name + "' and type=='DTemplate'"
     BODY = { "objects": [ { "path": project_name + "/" + mapping_name, "type": "DTEMPLATE" }]}
 

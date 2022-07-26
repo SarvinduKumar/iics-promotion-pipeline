@@ -12,10 +12,11 @@ UAT_IICS_USERNAME = os.environ['UAT_IICS_USERNAME']
 UAT_IICS_PASSWORD = os.environ['UAT_IICS_PASSWORD']
 
 PROJECT_NAME = os.environ['PROJECT_NAME']
-MAPPING_TASK_NAME = os.environ['MAPPING_TASK']
+MAPPING_TASK_NAME = os.environ['OBJECT_NAME']
 
 SESSION_ID = iics_login(LOGIN_URL, UAT_IICS_USERNAME, UAT_IICS_PASSWORD)
 
+# TODO: Fix the naming conventions here because they are all over the place
 SUCCESS = iics_rollback_mapping(POD_URL, SESSION_ID, PROJECT_NAME, MAPPING_TASK_NAME)
 
 if SUCCESS != 0:

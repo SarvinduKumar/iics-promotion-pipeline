@@ -20,11 +20,11 @@ pipeline {
                 script { 
                     def userInput = input(
                         message: 'Input Project Name and Mapping Task',
-                        parameters: [string(name: 'Project Name', trim: true), string(name: 'Mapping Task Name', trim: true)
+                        parameters: [string(name: 'Project Name', trim: true), string(name: 'Object Name', trim: true)
                     ])
                 
                     env.PROJECT_NAME = userInput['Project Name']
-                    env.MAPPING_TASK = userInput['Mapping Task Name']
+                    env.OBJECT_NAME = userInput['Object Name']
                 }
 
                 sh 'python3 ./scripts/rollback_mapping.py'

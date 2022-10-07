@@ -16,6 +16,7 @@ import json
 
 def iics_login(login_domain, iics_username, iics_password):
 
+    URL = login_domain
     BODY = {"username": iics_username,"password": iics_password}
 
     r = requests.post(url = URL, json = BODY)

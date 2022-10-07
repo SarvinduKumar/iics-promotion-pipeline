@@ -16,7 +16,7 @@ import json
 
 def iics_login(login_domain, iics_username, iics_password):
 
-    URL = login_domain
+    URL = login_domain + "/saas/public/core/v3/login"
     BODY = {"username": iics_username,"password": iics_password}
 
     r = requests.post(url = URL, json = BODY)
